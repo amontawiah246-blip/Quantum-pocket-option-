@@ -5,7 +5,7 @@ const db = new Database(SQLITE_DB_PATH);
 
 // Initialize tables
 db.exec(`
-  CREATE TABLE IF NOT EXISTS signals (
+  CREATE TABLE IF NOT EXISTS signals_v2 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     symbol TEXT,
     timeframe INTEGER,
@@ -15,17 +15,24 @@ db.exec(`
     timestamp INTEGER,
     filters_passed BOOLEAN,
     suppression_reason TEXT,
+    agreeing_strategies TEXT,
+    conflicting_strategies TEXT,
+    reasoning TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
 
 export const insertSignal = db.prepare(`
-  INSERT INTO signals (symbol, timeframe, expiration, direction, confidence, timestamp, filters_passed, suppression_reason)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO signals_v2 (
+    symbol, timeframe, expiration, direction, confidence, timestamp, 
+    filters_passed, suppression_reason, agreeing_strategies, 
+    conflicting_strategies, reasoning
+  )
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
 export const getRecentSignals = db.prepare(`
-  SELECT * FROM signals
+  SELECT * FROM signals_v2
   ORDER BY created_at DESC
   LIMIT 50
 `);

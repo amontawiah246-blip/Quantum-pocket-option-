@@ -17,6 +17,9 @@ type SignalResponse = {
   timestamp: number;
   filters_passed: boolean;
   suppression_reason: string | null;
+  agreeing_strategies: string[];
+  conflicting_strategies: string[];
+  reasoning: string | null;
 };
 
 type HistoryLog = {
@@ -29,6 +32,9 @@ type HistoryLog = {
   timestamp: number;
   filters_passed: number;
   suppression_reason: string | null;
+  agreeing_strategies: string | null;
+  conflicting_strategies: string | null;
+  reasoning: string | null;
   created_at: string;
 };
 
@@ -167,10 +173,25 @@ export default function App() {
           {/* Result Card */}
           {signal && (
             <section className={`p-6 rounded-2xl border ${signal.filters_passed ? (signal.direction === 'UP' ? 'bg-emerald-950/30 border-emerald-500/20' : 'bg-red-950/30 border-red-500/20') : 'bg-slate-900 border-white/5'} shadow-xl`}>
-              <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                Algorithm Output
-              </h2>
-              
+               <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                 Algorithms & Gemini Adjudication
+               </h2>
+               
+               {signal.reasoning && (
+                  <div className="mb-4 text-sm text-slate-300 italic bg-blue-900/10 p-3 rounded border border-blue-500/20">
+                     " {signal.reasoning} "
+                  </div>
+               )}
+
+               <div className="flex gap-2 mb-6">
+                  {signal.agreeing_strategies?.map((s) => (
+                      <span key={s} className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded-md max-w-[120px] truncate">{s}</span>
+                  ))}
+                  {signal.conflicting_strategies?.map((s) => (
+                      <span key={s} className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-2 py-1 rounded-md max-w-[120px] truncate">{s}</span>
+                  ))}
+               </div>
+
               {!signal.filters_passed ? (
                 <div className="text-center py-6">
                   <ShieldAlert className="h-10 w-10 text-amber-500 mx-auto mb-3 opacity-80" />
