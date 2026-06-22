@@ -1,0 +1,6 @@
+{
+  "name": "Binary FX",
+  "description": "DERIV Binary-Options AI Signal Engine",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
